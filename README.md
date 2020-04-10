@@ -12,6 +12,7 @@ You'll know it's working if you see this in the output console
 ### How to make a Custom Achievement
 To make a custom achievement just follow these simple steps.
 
+1. Add "AchievementLoader" as a dependency to your project
 1. Add a class to your plugin that inherits from BaseAchievement
 1. Decorate your class with the \[RegisterAchievement\] attribute
 1. Override OnInstall and OnUninstall with whatever you need to check for your challenge
