@@ -2,6 +2,9 @@
 
 A loader of sorts of the achievement variety
 
+# IMPORTANT
+To the **EXTENT OF MY KNOWLEDGE** this don't corrupt save files when uninstalled, *HOWEVER*, you should **ALWAYS** be safe and ***BACK UP YOUR SAVES!!*** It's better to be *safe* than **sorry**!
+
 ### Installing
 
 Download the .dll from either [Thunderstore](https://thunderstore.io/) or from the [Releases](https://github.com/dakkhuza/AchivementLoader/releases) page and place it into your Bepinex plugins folder.
