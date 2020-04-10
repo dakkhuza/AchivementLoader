@@ -10,7 +10,7 @@ You'll know it's working if you see this in the output console
 ![Image of it working correctly](http://dakkhuza.com/images/Unlock.png)
 
 ### How to make a Custom Achievement
-To make a custom challenge just follow these simple steps.
+To make a custom achievement just follow these simple steps.
 
 1. Add a class to your plugin that inherits from BaseAchievement
 1. Decorate your class with the \[RegisterAchievement\] attribute
