@@ -3,7 +3,14 @@
 A loader of sorts of the achievement variety
 
 # IMPORTANT
-To the **EXTENT OF MY KNOWLEDGE** this don't corrupt save files when uninstalled, *HOWEVER*, you should **ALWAYS** be safe and ***BACK UP YOUR SAVES!!*** It's better to be *safe* than **sorry**!
+To the **EXTENT OF MY KNOWLEDGE** this don't corrupt save files when uninstalled.
+
+*HOWEVER*
+
+You should **ALWAYS** be safe and ***BACK UP YOUR SAVES!!*** 
+
+It's better to be *safe* than **sorry**!
+
 
 ### Installing
 
