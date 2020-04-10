@@ -10,7 +10,7 @@ You'll know it's working if you see this in the output console
 ![Image of it working correctly](http://dakkhuza.com/images/Unlock.png)
 
 ### How to make a Custom Challenge
-To make a custom challenge is simple! Just follow these x simple steps.
+To make a custom challenge just follow these simple steps.
 
 1. Add a class to your plugin that inherits from BaseAchievement
 1. Decorate your class with the \[RegisterAchievement\] attribute
@@ -21,6 +21,30 @@ To make a custom challenge is simple! Just follow these x simple steps.
    1. Add tokens to the language file for your challenge in the format ACHIEVEMENT_NAMEINCAPS_NAME and ACHIEVEMENT_NAMEINCAPS_DESCRIPTION
    * The [AssetPlus](https://github.com/risk-of-thunder/R2API/wiki/AssetPlus) api makes this easy
    
+Here's an example of what a valid achievement class looks like
+```C#
+  [CustomUnlockable("Example.Example", "ACHIEVEMENT_EXAMPLEACHIEVEMENT_DESCRIPTION")]
+  [RegisterAchievement("ExampleAchievement", "Example.Example", null, null)]
+  public class ExampleAchievement : BaseAchievement
+  {
+      public override void OnInstall()
+      {
+          base.OnInstall();
+          RoR2Application.onUpdate += AutoGrant;
+      }
+
+      public override void OnUninstall()
+      {
+          base.OnUninstall();
+          RoR2Application.onUpdate -= AutoGrant;
+      }
+
+      public void AutoGrant()
+      {
+          Grant();
+      }
+  }
+```
 For more details check out the [wiki](https://github.com/dakkhuza/AchivementLoader/wiki)
 
 ## License
