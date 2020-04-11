@@ -8,37 +8,10 @@ using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using BepInEx.Logging;
+using Dak.AchievementLoader.CustomAchievement;
 
 namespace Dak.AchievementLoader
 {
-	/// <summary>
-	/// Adds a custom unlock to Risk of Rain 2's unlock catalog
-	/// </summary>
-	public class CustomUnlockable : Attribute 
-	{
-		public string name;
-		public string nameToken;
-
-		/// <summary>
-		/// Gets an UnlockableDef from the attributes properties
-		/// </summary>
-		public UnlockableDef GetUnlockableDef()
-		{
-			return new UnlockableDef() { name = name, nameToken = nameToken };
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="name">The identification name</param>
-		/// <param name="nameToken">The token used to seach up the unlock condition</param>
-		public CustomUnlockable(string name, string nameToken)
-		{
-			this.name = name;
-			this.nameToken = nameToken;
-		}
-	}
-
     [BepInPlugin("com.dakkhuza.plugins.achievementloader", "AchievementLoader", "1.0.0")]
     public class AchievementLoader : BaseUnityPlugin
     {
