@@ -43,21 +43,28 @@ namespace Dak.AchievementLoader
 			where attributes != null && attributes.Length > 0
 			select(attributes.Cast<CustomUnlockable>().ToArray()[0]);
 
-			unlockableLogger.LogInfo(string.Format("Found {0} custom unlock(s) to add to catalog", customUnlockableDefs.Count()));
-
-			//Iterate through each custom unlock and add them to the unlock catalog
-			foreach(CustomUnlockable customUnlock in customUnlockableDefs)
+			if (customUnlockableDefs.Count() > 0)
 			{
-				//Create new unlock def
-				UnlockableDef newUnlock = customUnlock.GetUnlockableDef();
+				unlockableLogger.LogInfo(string.Format("Found {0} custom unlock(s) to add to catalog", customUnlockableDefs.Count()));
 
-				//Set the index of the unlock def
-				newUnlock.index = new UnlockableIndex(___nameToDefTable.Count);
+				//Iterate through each custom unlock and add them to the unlock catalog
 
-				//Add the def to the unlock table
-				___nameToDefTable.Add(newUnlock.name, newUnlock);
+				foreach (CustomUnlockable customUnlock in customUnlockableDefs)
+				{
+					//Create new unlock def
+					UnlockableDef newUnlock = customUnlock.GetUnlockableDef();
 
-				unlockableLogger.LogDebug(string.Format("Added Custom Unlock {0}", newUnlock.name));
+					//Set the index of the unlock def
+					newUnlock.index = new UnlockableIndex(___nameToDefTable.Count);
+
+					//Add the def to the unlock table
+					___nameToDefTable.Add(newUnlock.name, newUnlock);
+
+					unlockableLogger.LogDebug(string.Format("Added Custom Unlock {0}", newUnlock.name));
+				}
+			}else
+			{
+				unlockableLogger.LogInfo("Found no custom unlocks to add");
 			}
 			unlockableLogger.LogInfo("Done!");
 
@@ -67,7 +74,7 @@ namespace Dak.AchievementLoader
 	}
 
 	[HarmonyPatch(typeof(AchievementManager), "CollectAchievementDefs")]
-	class PatchLoader
+	class PatchManager
 	{
 		static bool Prefix(ref Dictionary<string, AchievementDef> ___achievementNamesToDefs, ref List<string> ___achievementIdentifiers, ref AchievementDef[] ___achievementDefs, ref AchievementDef[] ___serverAchievementDefs, ref Action ___onAchievementsRegistered, Dictionary<string, AchievementDef> map)
 		{
