@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>2.0.0</Version>
+    <Authors>Dak</Authors>
+    <Description>A loader of sorts of the achievement variety</Description>
+    <Copyright>https://github.com/dakkhuza/AchivementLoader/blob/master/LICENSE</Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dakkhuza/AchivementLoader</RepositoryUrl>
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
