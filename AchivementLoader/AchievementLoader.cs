@@ -83,6 +83,21 @@ namespace Dak.AchievementLoader
 			achievementLogger.LogMessage("__== Achievement Loader ==__");
 			BepInEx.Logging.Logger.Sources.Add(achievementLogger);
 
+			achievementLogger.LogInfo("Searching for overrides");
+
+			//Search and collect overrides
+			IEnumerable<Type> achievementOverrides = 
+				from a in AppDomain.CurrentDomain.GetAssemblies()
+				from t in a.GetTypes()
+				let attributes = t.GetCustomAttributes(typeof(OverrideAchievement), true)
+				where attributes != null && attributes.Length > 0
+				select (attributes.Cast<OverrideAchievement>().ToArray()[0].achievementType);
+
+			//Convert from IEnum to List since it's way faster to search a list lmao
+			List<Type> achievementOverrideTypes = achievementOverrides.ToList();
+
+			achievementLogger.LogInfo(string.Format("Found {0} overrides", achievementOverrides.Count()));
+
 			//Used for building achievement unlock chains?
 			List<AchievementDef> list = new List<AchievementDef>();
 
@@ -97,12 +112,22 @@ namespace Dak.AchievementLoader
 								   orderby type.Name
 								   select type)
 			{
+				//Check if the achievement has an override defined
+				if (achievementOverrideTypes.Contains(achievementClass))
+				{
+					//If it does, don't add it
+					continue;
+				}
+
 				//Get the achievement attribute
 				RegisterAchievementAttribute registerAchievementAttribute = (RegisterAchievementAttribute)Attribute.GetCustomAttribute(achievementClass, typeof(RegisterAchievementAttribute));
 
 				//Check if the achievement was registered
 				if (registerAchievementAttribute != null)
 				{
+					//Check to see if the achievement was overrided
+
+
 					//Make sure each achievement is unique
 					if (map.ContainsKey(registerAchievementAttribute.identifier))
 					{

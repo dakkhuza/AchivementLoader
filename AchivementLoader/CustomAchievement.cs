@@ -34,14 +34,14 @@ namespace Dak.AchievementLoader.CustomAchievement
 	/// <summary>
 	/// Overrides the specified achievement
 	/// </summary>
-	public class OverrideAchievement : Attribute
+	public class OverrideAchievement : Attribute 
 	{
 		public Type achievementType;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="achievementType">Type of the achievement to override</param>
+		/// <param name="achievementType">The achievement to override</param>
 		public OverrideAchievement(Type achievementType)
 		{
 			this.achievementType = achievementType;
