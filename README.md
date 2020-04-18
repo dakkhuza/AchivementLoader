@@ -14,7 +14,7 @@ It's better to be *safe* than **sorry**!
 
 ### Installing
 
-Download the .dll from either [Thunderstore](https://thunderstore.io/) or from the [Releases](https://github.com/dakkhuza/AchivementLoader/releases) page and place it into your Bepinex plugins folder.
+Download the .dll from either [Thunderstore](https://thunderstore.io/package/dakkhuza/AchievementLoader/) or from the [Releases](https://github.com/dakkhuza/AchivementLoader/releases) page and place it into your Bepinex plugins folder.
 
 You'll know it's working if you see this in the output console
 ![Image of it working correctly](http://dakkhuza.com/images/Unlock.png)
