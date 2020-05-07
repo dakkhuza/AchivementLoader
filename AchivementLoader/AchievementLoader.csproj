@@ -17,21 +17,27 @@
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\..\Risky Rain Modded\BepInEx\core\0Harmony.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\Risky Rain Modded\Risk of Rain 2_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\..\..\Risky Rain Modded\BepInEx\core\BepInEx.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\Risky Rain Modded\Risk of Rain 2_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\Risky Rain Modded\Risk of Rain 2_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>..\..\..\Risky Rain Modded\Risk of Rain 2_Data\Managed\UnityEngine.Networking.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 
