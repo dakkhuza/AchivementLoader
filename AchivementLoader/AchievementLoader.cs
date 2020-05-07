@@ -12,10 +12,10 @@ using Dak.AchievementLoader.CustomAchievement;
 
 namespace Dak.AchievementLoader
 {
-    [BepInPlugin("com.dakkhuza.plugins.achievementloader", "AchievementLoader", "1.0.0")]
+	[BepInPlugin("com.dakkhuza.plugins.achievementloader", "AchievementLoader", "2.1.0")]
     public class AchievementLoader : BaseUnityPlugin
     {
-		void Awake()
+		public void Awake()
 		{
 			//Create the harmony instance and patch them methods
 			var harmony = new Harmony("com.dakkhuza.patchers.achievementloader");
@@ -26,7 +26,7 @@ namespace Dak.AchievementLoader
 	[HarmonyPatch(typeof(UnlockableCatalog), "Init")]
 	class PatchUnlockable
 	{
-		static bool Prefix(ref Dictionary<string, UnlockableDef> ___nameToDefTable)
+		public static bool Prefix(ref Dictionary<string, UnlockableDef> ___nameToDefTable)
 		{
 			//Set up logging
 			var unlockableLogger = new ManualLogSource("AchievementLoader.Unlock");
@@ -76,13 +76,13 @@ namespace Dak.AchievementLoader
 	[HarmonyPatch(typeof(AchievementManager), "CollectAchievementDefs")]
 	class PatchManager
 	{
-		static bool Prefix(ref Dictionary<string, AchievementDef> ___achievementNamesToDefs, ref List<string> ___achievementIdentifiers, ref AchievementDef[] ___achievementDefs, ref AchievementDef[] ___serverAchievementDefs, ref Action ___onAchievementsRegistered, Dictionary<string, AchievementDef> map)
+		public static bool Prefix(ref Dictionary<string, AchievementDef> ___achievementNamesToDefs, ref List<string> ___achievementIdentifiers, ref AchievementDef[] ___achievementDefs, ref AchievementDef[] ___serverAchievementDefs, ref Action ___onAchievementsRegistered, Dictionary<string, AchievementDef> map)
 		{
 			//Setup logging
 			var achievementLogger = new ManualLogSource("AchievementLoader.Achievement");
-			achievementLogger.LogMessage("__== Achievement Loader ==__");
 			BepInEx.Logging.Logger.Sources.Add(achievementLogger);
 
+			achievementLogger.LogMessage("__== Achievement Loader ==__");
 			achievementLogger.LogInfo("Searching for overrides");
 
 			//Search and collect overrides
@@ -122,12 +122,18 @@ namespace Dak.AchievementLoader
 				//Get the achievement attribute
 				RegisterAchievementAttribute registerAchievementAttribute = (RegisterAchievementAttribute)Attribute.GetCustomAttribute(achievementClass, typeof(RegisterAchievementAttribute));
 
+				//Get the custom achievement attribute
+				CustomAchievementAttribute customAchievementAttribute = (CustomAchievementAttribute)Attribute.GetCustomAttribute(achievementClass, typeof(CustomAchievementAttribute));
+
+				//If it's found, set the vanilla attribute to have the same values so we don't have to change a bunch of stuff
+				if (customAchievementAttribute != null)
+				{
+					registerAchievementAttribute = customAchievementAttribute;
+				}
+
 				//Check if the achievement was registered
 				if (registerAchievementAttribute != null)
 				{
-					//Check to see if the achievement was overrided
-
-
 					//Make sure each achievement is unique
 					if (map.ContainsKey(registerAchievementAttribute.identifier))
 					{
@@ -140,6 +146,18 @@ namespace Dak.AchievementLoader
                     }
 					else
 					{
+						//Create the vanilla resource path
+						string iconPath = "Textures/AchievementIcons/tex" + registerAchievementAttribute.identifier + "Icon";
+
+						//Create the icon name
+						string iconName = "tex" + registerAchievementAttribute.identifier + "Icon";
+
+						//If it's a custom achievement, get the path for it
+						if (customAchievementAttribute != null)
+						{
+							iconPath = customAchievementAttribute.GetPath(iconName);
+						}
+
 						//If  the achievement is unique, build the achievement
 						AchievementDef achievementDef2 = new AchievementDef
 						{
@@ -148,10 +166,11 @@ namespace Dak.AchievementLoader
 							prerequisiteAchievementIdentifier = registerAchievementAttribute.prerequisiteAchievementIdentifier,
 							nameToken = "ACHIEVEMENT_" + registerAchievementAttribute.identifier.ToUpper(CultureInfo.InvariantCulture) + "_NAME",
 							descriptionToken = "ACHIEVEMENT_" + registerAchievementAttribute.identifier.ToUpper(CultureInfo.InvariantCulture) + "_DESCRIPTION",
-							iconPath = "Textures/AchievementIcons/tex" + registerAchievementAttribute.identifier + "Icon",
+							iconPath = iconPath,
 							type = achievementClass,
 							serverTrackerType = registerAchievementAttribute.serverTrackerType
 						};
+
 						//Add the achievement identifier to the achievement identifier list
 						___achievementIdentifiers.Add(registerAchievementAttribute.identifier);
 
