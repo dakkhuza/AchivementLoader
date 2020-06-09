@@ -9,6 +9,7 @@ using System.Linq;
 using UnityEngine;
 using BepInEx.Logging;
 using Dak.AchievementLoader.CustomAchievement;
+using System.Reflection;
 
 namespace Dak.AchievementLoader
 {
@@ -35,13 +36,11 @@ namespace Dak.AchievementLoader
 
 			unlockableLogger.LogInfo("Searching for custom unlockables...");
 
-			//Build a list of all CustomUnlocks
-			var customUnlockableDefs =
-			from a in AppDomain.CurrentDomain.GetAssemblies()
-			from t in a.GetTypes()
-			let attributes = t.GetCustomAttributes(typeof(CustomUnlockable), true)
-			where attributes != null && attributes.Length > 0
-			select(attributes.Cast<CustomUnlockable>().ToArray()[0]);
+			var customUnlockableDefs =  
+				from t in AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name != "ConfigurationManager").SelectMany(a => { unlockableLogger.LogDebug(String.Format("Scanning assembly {0} for unlockable defs", a.FullName)); try { return a.GetTypes(); } catch { unlockableLogger.LogError(String.Format("Unable to scan {0} for types", a.FullName)); return new Type[0]; } })
+				let attributes = t.GetCustomAttributes(typeof(CustomUnlockable), true)
+				where attributes != null && attributes.Length > 0
+				select (attributes.Cast<CustomUnlockable>().ToArray()[0]);
 
 			if (customUnlockableDefs.Count() > 0)
 			{
@@ -87,11 +86,10 @@ namespace Dak.AchievementLoader
 
 			//Search and collect overrides
 			IEnumerable<Type> achievementOverrides = 
-				from a in AppDomain.CurrentDomain.GetAssemblies()
-				from t in a.GetTypes()
+				from t in AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name != "ConfigurationManager").SelectMany(a => { achievementLogger.LogDebug(String.Format("Scanning assembly {0} for override defs", a.FullName)); try { return a.GetTypes(); } catch { achievementLogger.LogError(String.Format("Unable to scan {0} for override defs", a.FullName)); return new Type[0]; } })
 				let attributes = t.GetCustomAttributes(typeof(OverrideAchievement), true)
 				where attributes != null && attributes.Length > 0
-				select (attributes.Cast<OverrideAchievement>().ToArray()[0].achievementType);
+				select attributes.Cast<OverrideAchievement>().ToArray()[0].achievementType;
 
 			//Convert from IEnum to List since it's way faster to search a list lmao
 			List<Type> achievementOverrideTypes = achievementOverrides.ToList();
@@ -105,9 +103,10 @@ namespace Dak.AchievementLoader
 			map.Clear();
 
 			//Get all classes that inherit from BaseAchievement
+
 			foreach (Type achievementClass in from type in (AppDomain.CurrentDomain.GetAssemblies()
 			.Where(a => !a.IsDynamic)
-            .SelectMany(a => a.GetTypes()))
+            .SelectMany(a => { try { return a.GetTypes(); } catch { achievementLogger.LogError(String.Format("Unable to scan {0} for achievements", a.FullName )); return new Type[0]; } }))
 								   where type.IsSubclassOf(typeof(BaseAchievement))
 								   orderby type.Name
 								   select type)
